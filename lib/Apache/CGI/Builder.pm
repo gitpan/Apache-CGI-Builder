@@ -1,5 +1,5 @@
 package Apache::CGI::Builder ;
-$VERSION = 1.0 ;
+$VERSION = 1.1 ;
 
 ; use strict
 ; $Carp::Internal{+__PACKAGE__}++
@@ -51,6 +51,16 @@ $VERSION = 1.0 ;
    ; MP2 ? Apache::OK : Apache::Constants::OK
    }
 
+; sub page_content_check
+   { my $s = shift
+   ; unless (length $s->page_content)
+      { $s->header( -status => '404 Not Found' )
+            unless defined $s->header->{-status}
+      ; return 0
+      }
+   ; 1
+   }
+
 ; 1
 
 
@@ -60,9 +70,9 @@ __END__
 
 Apache::CGI::Builder - CGI::Builder and Apache/mod_perl integration
 
-=head1 VERSION 1.0
+=head1 VERSION 1.1
 
-To have the complete list of all the extensions of the CBF, see L<CGI::Builder/"Extensions List">
+The latest versions changes are reported in the F<Changes> file in this distribution. To have the complete list of all the extensions of the CBF, see L<CGI::Builder/"Extensions List">
 
 =head1 INSTALLATION
 
@@ -71,7 +81,7 @@ To have the complete list of all the extensions of the CBF, see L<CGI::Builder/"
 =item Prerequisites
 
     Apache/mod_perl 1 or 2
-    CGI::Builder >= 1.0
+    CGI::Builder >= 1.1
 
 =item CPAN
 
@@ -244,6 +254,14 @@ This module adds just one property to the standard C<CGI::Builder> properties.
 =head2 r
 
 This property allows you to access the request Apache object.
+
+=head1 CBF overridden methods
+
+=head2 page_content_check
+ 
+This extension overrides this method just changing the '204 No Content' that the CBF sets when no page_content has been produced by the process, with a more consistent '404 Not Found' status. It does so because the client is requesting a simple not found page, which is a very different situation from a found CGI script that does not send any content (204 No Content).
+
+B<Note>: You don't need to directly use this method since it's internally called at the very start of the RESPONSE phase. You don't need to override it if you want just to send a different header status, since it sets the status just if it is not defined yet.
 
 =head1 SUPPORT and FEEDBACK
 

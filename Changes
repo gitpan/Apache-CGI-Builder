@@ -1,4 +1,9 @@
 Apache-CGI-Builder Latest Versions Changes
 
+
+Version 1.1
+- Advanced method 'page_content_check' overridden with automatic set of 404
+  status header unless status is already defined
+
 Version 1.0
 - First public release
